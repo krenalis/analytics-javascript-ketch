@@ -1,0 +1,22 @@
+{
+	"tasks": {
+		"commit": "npm ci && deno fmt && deno task build",
+		"bundle": "deno lint && npx esbuild index.js --bundle --sourcemap --outfile=dist/krenalis-ketch.bundle.js",
+		"transpile": "npx swc dist/krenalis-ketch.bundle.js -o dist/krenalis-ketch.es5.js",
+		"minify": "npx esbuild dist/krenalis-ketch.es5.js --outfile=dist/krenalis-ketch.min.js --minify --sourcemap --format=iife --target=es5 '--banner:js=/*! Krenalis Ketch integration | MIT License | Copyright (c) 2026 Open2b | https://github.com/krenalis/analytics-javascript-ketch */'",
+		"build": "deno task bundle && deno task transpile && deno task minify"
+	},
+	"fmt": {
+		"lineWidth": 120,
+		"semiColons": false,
+		"singleQuote": true,
+		"useTabs": true,
+		"exclude": ["README.md"]
+	},
+	"lint": {
+		"include": [
+			"index.js",
+			"ketch.js"
+		]
+	}
+}

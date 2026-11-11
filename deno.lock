@@ -1,0 +1,12 @@
+{
+  "version": "5",
+  "workspace": {
+    "packageJson": {
+      "dependencies": [
+        "npm:@swc/cli@~0.7.10",
+        "npm:@swc/core@^1.15.11",
+        "npm:esbuild@~0.27.2"
+      ]
+    }
+  }
+}

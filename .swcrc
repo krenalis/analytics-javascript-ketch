@@ -1,0 +1,17 @@
+{
+  "jsc": {
+    "transform": {
+      "optimizer": {
+        "globals": {
+          "vars": {
+            "globalThis": "window"
+          }
+        }
+      }
+    },
+    "loose": true,
+    "preserveAllComments": true
+  },
+  "isModule": true,
+  "sourceMaps": true
+}
