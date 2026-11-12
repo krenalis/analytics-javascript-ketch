@@ -14,6 +14,8 @@ Official integration to handle consents with the [Ketch](https://www.ketch.com/)
 
 The Ketch tag can be added to the page before or after the SDK: if it is not there yet, the integration waits for it.
 
+The integration also handles initialization after Ketch has already resolved the consent or closed the banner. Ketch sends the current consent to new `consent` listeners as soon as it is available, even if resolved before registration, so no separate lookup is needed. A one-time `hideExperienceReasonUpdated` listener recovers the last known reason, including `willNotShow` when no banner is needed. The regular `hideExperience` listener handles subsequent closures, including repeated closures with the same reason.
+
 | Case                                                | When the SDK is loaded                            |
 | --------------------------------------------------- | ------------------------------------------------- |
 | New user, a purpose requires opt-in (e.g. GDPR)     | when the user makes a choice or closes the banner |

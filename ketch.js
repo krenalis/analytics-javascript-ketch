@@ -27,6 +27,7 @@ export function withKetch(krenalis) {
 	let consents = null // consent purposes from Ketch, or null if not received yet
 	let isAllowed = false // reports whether Ketch allows loading the SDK
 	let isLoaded = false // reports whether the SDK has been loaded
+	let hasObservedHideExperience = false // reports whether a live or previously recorded hide has been handled
 
 	const loadIfAllowed = () => {
 		if (isLoaded || !isLoadCalled || consents == null || !isAllowed) {
@@ -52,8 +53,10 @@ export function withKetch(krenalis) {
 		loadIfAllowed()
 	}
 
-	// onHideExperience is called when the consent banner is hidden.
-	const onHideExperience = () => {
+	// onExperienceHidden is called when the consent banner is hidden or will
+	// not be shown.
+	const onExperienceHidden = () => {
+		hasObservedHideExperience = true
 		// Request the current consent programmatically because the Ketch banner
 		// does not always emit the consent event correctly when it closes.
 		globalThis.ketch('getConsent', (consent) => {
@@ -74,8 +77,25 @@ export function withKetch(krenalis) {
 	}
 
 	const addKetchListeners = () => {
+		// Ketch replays the current consent to new listeners if it is available,
+		// even if resolved before listener registration, so no separate lookup
+		// is needed.
 		globalThis.ketch('on', 'consent', onConsent)
-		globalThis.ketch('on', 'hideExperience', onHideExperience)
+
+		// Handle every banner closure or decision not to show it.
+		globalThis.ketch('on', 'hideExperience', onExperienceHidden)
+
+		// Recover a hide reason recorded before the initialization of the
+		// wrapper. Ketch only replays this state after the banner was closed or
+		// a decision not to show it was made.
+		globalThis.ketch('once', 'hideExperienceReasonUpdated', () => {
+			if (!hasObservedHideExperience) {
+				onExperienceHidden()
+			}
+		})
+
+		// If no purpose requires opt-in, allow loading as soon as consent is
+		// available, without waiting for the banner to close.
 		globalThis.ketch('getConfig', onConfig)
 	}
 
