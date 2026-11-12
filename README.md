@@ -54,12 +54,37 @@ To set it up manually:
 
 ## Development
 
-You'll need [Deno](https://deno.com/) and [Node.js](https://nodejs.org/) (with npm).
+You'll need [Node.js](https://nodejs.org/) (with npm). See `engines.node` in `package.json` for compatible versions; CI uses Node.js 24.
+
+Install the development dependencies with:
 
 ```sh
-deno fmt          # format the files
-deno task build   # build dist/krenalis-ketch.min.js (ES5)
+npm ci
 ```
+
+The project uses [Prettier](https://prettier.io/) to format files. Run it with:
+
+```sh
+npm run format
+```
+
+The README and generated files are excluded from formatting.
+
+Before committing, run:
+
+```sh
+npm ci            # install the dependencies from package-lock.json
+npm run format    # format the files with Prettier
+npm run build     # lint with ESLint and build dist/krenalis-ketch.min.js (ES5)
+```
+
+Or run the same sequence with a single command:
+
+```sh
+npm run commit
+```
+
+The build uses esbuild for bundling and minification, and SWC for transpilation to ES5.
 
 ## License
 

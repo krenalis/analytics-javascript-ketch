@@ -4,10 +4,27 @@
 	"private": true,
 	"description": "Ketch consent management integration for the Krenalis JavaScript SDK",
 	"type": "module",
+	"scripts": {
+		"format": "prettier --write .",
+		"format:check": "prettier --check .",
+		"lint": "eslint index.js ketch.js --max-warnings=0",
+		"bundle": "esbuild index.js --bundle --sourcemap --outfile=dist/krenalis-ketch.bundle.js",
+		"transpile": "swc dist/krenalis-ketch.bundle.js -o dist/krenalis-ketch.es5.js",
+		"minify": "esbuild dist/krenalis-ketch.es5.js --outfile=dist/krenalis-ketch.min.js --minify --sourcemap --format=iife --target=es5 \"--banner:js=/*! Krenalis Ketch integration | MIT License | Copyright (c) 2026 Open2b | https://github.com/krenalis/analytics-javascript-ketch */\"",
+		"build": "npm run lint && npm run bundle && npm run transpile && npm run minify",
+		"commit": "npm ci && npm run format && npm run build"
+	},
+	"engines": {
+		"node": "^20.19.0 || ^22.13.0 || >=24"
+	},
 	"devDependencies": {
+		"@eslint/js": "10.0.1",
 		"@swc/cli": "^0.7.10",
 		"@swc/core": "^1.15.11",
-		"esbuild": "^0.27.2"
+		"esbuild": "^0.27.2",
+		"eslint": "10.14.0",
+		"globals": "17.14.0",
+		"prettier": "3.10.1"
 	},
 	"license": "MIT",
 	"repository": {
