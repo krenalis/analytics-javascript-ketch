@@ -54,8 +54,13 @@ export function withKetch(krenalis) {
 
     // onHideExperience is called when the consent banner is hidden.
     const onHideExperience = () => {
-        isAllowed = true;
-        loadIfAllowed();
+        // Request the current consent programmatically because the Ketch banner
+        // does not always emit the consent event correctly when it closes.
+        globalThis.ketch("getConsent", (consent) => {
+            onConsent(consent);
+            isAllowed = true;
+            loadIfAllowed();
+        });
     };
 
     // onConfig is called with the Ketch configuration requested via getConfig.
