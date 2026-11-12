@@ -40,7 +40,7 @@ export function withKetch(krenalis) {
 
     // onConsent is called when Ketch communicates the consent or its changes.
     const onConsent = (consent) => {
-        const purposes = parsePurposes(consent);
+        const purposes = copyPurposes(consent);
         if (purposes == null) {
             return;
         }
@@ -119,20 +119,18 @@ function requiresOptIn(config) {
     return false;
 }
 
-// parsePurposes returns a copy of the purposes of a consent communicated by
-// Ketch, or null if consent is not valid. Purposes is an object whose keys are
-// the purposes and whose values report whether the user has consented to them.
-function parsePurposes(consent) {
+// copyPurposes returns a deep copy of the purposes communicated by Ketch,
+// or null if consent or consent.purposes is not an object. The copy isolates 
+// the SDK's consents from changes to the original consent, including nested 
+// objects.
+function copyPurposes(consent) {
     if (!isPlainObject(consent) || !isPlainObject(consent.purposes)) {
         return null;
     }
-    const purposes = {};
-    for (const purpose in consent.purposes) {
-        if (Object.prototype.hasOwnProperty.call(consent.purposes, purpose)) {
-            purposes[purpose] = consent.purposes[purpose];
-        }
+    if (typeof structuredClone === "function") {
+        return structuredClone(consent.purposes);
     }
-    return purposes;
+    return JSON.parse(JSON.stringify(consent.purposes));
 }
 
 // isPlainObject reports whether v is a non-null object and not an array.
