@@ -29,7 +29,6 @@ export function withKetch(krenalis) {
 			return
 		}
 		isLoaded = true
-		// Pass initial consents to the SDK constructor through the snippet loader.
 		const [writeKey, endpoint, options] = loadArguments
 		load.call(krenalis, writeKey, endpoint, options, consents)
 	}
