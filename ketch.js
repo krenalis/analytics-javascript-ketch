@@ -11,12 +11,7 @@ const pollInterval = 500
 // consent experience is hidden or no purpose requires opt-in. Events triggered
 // before then are queued, and later consent changes are forwarded to the SDK.
 export function withKetch(krenalis) {
-	if (
-		krenalis == null ||
-		typeof krenalis.load !== 'function' ||
-		typeof krenalis.unshift !== 'function' ||
-		typeof krenalis.setConsents !== 'function'
-	) {
+	if (krenalis == null || typeof krenalis.load !== 'function' || typeof krenalis.setConsents !== 'function') {
 		throw new Error('Ketch wrapper: krenalis must be the Krenalis snippet object, with the setConsents method')
 	}
 
@@ -34,9 +29,8 @@ export function withKetch(krenalis) {
 			return
 		}
 		isLoaded = true
-		// Set the consents before the queued calls.
-		krenalis.unshift(['setConsents', consents])
-		load.apply(krenalis, loadArguments)
+		const [writeKey, endpoint, options] = loadArguments
+		load.call(krenalis, writeKey, endpoint, options, consents)
 	}
 
 	// onConsent is called when Ketch communicates the consent or its changes.

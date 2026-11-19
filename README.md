@@ -9,8 +9,8 @@ Official integration to handle consents with the [Ketch](https://www.ketch.com/)
 1. **The SDK is loaded only once the user's choice is known.** Until then, the calls to the SDK (`page`, `track`, ...) are queued, and the SDK neither stores data on the device nor sends events. The SDK is loaded when Ketch has communicated the user's consent and either:
     - the Ketch consent experience (the banner) is closed, because the user has made a choice or has closed it, or it is not shown at all, typically because the user has already made a choice in a previous visit;
     - no purpose of the user's jurisdiction requires the user's opt-in (for example, where the banner is just a notice), so there is no choice to wait for.
-2. **The consent is added to every event**, as `context.consents`, including the events queued before the consent was known. It contains the Ketch purposes, for example `{ "analytics": true, "advertising": false }`.
-3. **Changes of the consent** made by the user later are applied to the subsequent events.
+2. **Every event includes the user's consent choices in `context.consents`.** This includes events queued before Ketch reported consent and events generated from the query string. The field records the user's choice for each Ketch purpose, for example `{ "analytics": true, "advertising": false }`.
+3. **Changes of the consent** made by the user later are forwarded through `setConsents` and applied to the subsequent events.
 
 The Ketch tag can be added to the page before or after the SDK: if it is not there yet, the integration waits for it.
 
